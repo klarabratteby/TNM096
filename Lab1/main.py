@@ -30,7 +30,17 @@ def h1(state, goal_state):
 # Function for h2
 
 
-# def h2(state, goal_state):
+def h2(state, goal_state):
+    distance = 0
+    
+    for i in range(len(state)):
+        vdistance = abs(state[i] % 3 - goal_state[i] % 3)
+        hdistance = abs(state[i] - 3 * (state[i] % 3) - (goal_state[i] - 3 * (goal_state[i] % 3)))
+        
+        distance = distance + vdistance + hdistance
+    
+    return distance
+
 
 # Possible actions
 
