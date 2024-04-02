@@ -27,8 +27,12 @@ def h1(state, goal_state):
     misplaced = sum(1 for i in range(len(state)) if state[i] != goal_state[i])
     return misplaced
 
-# Possible actions
+# Function for h2
 
+
+# def h2(state, goal_state):
+
+# Possible actions
 
 def actions(state):
     actions = []
@@ -94,9 +98,10 @@ class PriorityQueue:
         return heapq.heappop(self.elements)[1]
 
 
-def astar(initial_state, goal_state):
+def astar(initial_state, goal_state, heuristic):
     frontier = PriorityQueue()
-    start_state = State(initial_state, None, 0, h1(initial_state, goal_state))
+    start_state = State(initial_state, None, 0,
+                        heuristic(initial_state, goal_state))
     # Add initial state to the priorityqueue with priority based on cost and heuristic
     frontier.put(start_state, start_state.cost + start_state.heuristic)
     # Keep track of explored states
@@ -152,13 +157,27 @@ if __name__ == "__main__":
     initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
     goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
-    # Start measuring time
+    # Start time
     start_time = time.time()
 
-    h1_value = h1(initial_state, goal_state)
+    # Choose heuristic function
+
+    while True:
+        choice = input("Enter h1 or h2:")
+        if choice in ['h1', 'h2']:
+            break
+        else:
+            print("Invalid")
+
+    heuristic_function = globals()[choice]
+
+    # h1_value = h1(initial_state, goal_state)
+    # print("Missplaced tiles:", h1_value)
+    # h2_value = h2(initial_state, goal_state)
+    # print("Manhattan distance:", h2_value)
 
     # Run A*
-    solution_path = astar(initial_state, goal_state)
+    solution_path = astar(initial_state, goal_state, heuristic_function)
 
     # Calculate elapsed time
     elapsed_time = time.time() - start_time
