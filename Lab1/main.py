@@ -30,15 +30,34 @@ def h1(state, goal_state):
 # Function for h2
 
 
+'''
 def h2(state, goal_state):
     distance = 0
-    
+
     for i in range(len(state)):
         vdistance = abs(state[i] % 3 - goal_state[i] % 3)
-        hdistance = abs(state[i] - 3 * (state[i] % 3) - (goal_state[i] - 3 * (goal_state[i] % 3)))
-        
+        hdistance = abs(state[i] - 3 * (state[i] % 3) -
+                        (goal_state[i] - 3 * (goal_state[i] % 3)))
+
         distance = distance + vdistance + hdistance
-    
+
+    return distance
+'''
+
+
+def h2(state, goal_state):
+    distance = 0
+
+    for i in range(len(state)):
+        if state[i] != 0:  # Skip the blank tile
+            # Calculate the current position and goal position of the tile
+            row, col = i // 3, i % 3
+            goal_index = goal_state.index(state[i])
+            goal_row, goal_col = goal_index // 3, goal_index % 3
+
+            # Calculate the Manhattan distance for the tile
+            distance += abs(row - goal_row) + abs(col - goal_col)
+
     return distance
 
 
@@ -161,7 +180,6 @@ def print_state(state):
         print(state[i * 3:i * 3 + 3])
     print()
 
-
     # Main program
 if __name__ == "__main__":
     initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
@@ -181,10 +199,10 @@ if __name__ == "__main__":
 
     heuristic_function = globals()[choice]
 
-    # h1_value = h1(initial_state, goal_state)
-    # print("Missplaced tiles:", h1_value)
-    # h2_value = h2(initial_state, goal_state)
-    # print("Manhattan distance:", h2_value)
+    h1_value = h1(initial_state, goal_state)
+    print("Missplaced tiles:", h1_value)
+    h2_value = h2(initial_state, goal_state)
+    print("Manhattan distance:", h2_value)
 
     # Run A*
     solution_path = astar(initial_state, goal_state, heuristic_function)
