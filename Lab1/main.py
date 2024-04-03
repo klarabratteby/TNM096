@@ -11,9 +11,11 @@ class State:
         self.parent = parent
         self.cost = cost
         self.heuristic = heuristic
+    # Equality comparison
 
     def __eq__(self, other):
         return self.state == other.state
+    # Less than comparison
 
     def __lt__(self, other):
         return (self.cost + self.heuristic) < (other.cost + other.heuristic)
@@ -153,7 +155,7 @@ def astar(initial_state, goal_state, heuristic):
             # Check if the next state has not been explored
             if tuple(next_state) not in explored:
                 next_state_obj = State(
-                    next_state, current_state, current_state.cost + 1, h1(next_state, goal_state))
+                    next_state, current_state, current_state.cost + 1, heuristic(next_state, goal_state))
                 # If the next state has not been explored -> add to the priority queue
                 frontier.put(next_state_obj, next_state_obj.cost +
                              next_state_obj.heuristic)
@@ -179,6 +181,7 @@ def print_state(state):
     for i in range(3):
         print(state[i * 3:i * 3 + 3])
     print()
+
 
     # Main program
 if __name__ == "__main__":
