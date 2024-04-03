@@ -24,9 +24,10 @@ class State:
 
 
 def h1(state, goal_state):
-
     # Number of misplaced tiles
-    misplaced = sum(1 for i in range(len(state)) if state[i] != goal_state[i])
+    misplaced = sum(1 for i in range(len(state))
+                    if state[i] != goal_state[i] and state[i] != 0)
+
     return misplaced
 
 # Function for h2
@@ -182,11 +183,11 @@ def print_state(state):
         print(state[i * 3:i * 3 + 3])
     print()
 
-
     # Main program
 if __name__ == "__main__":
-    initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
+    # initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
     goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+    initial_state = [8, 6, 7, 2, 5, 4, 3, 0, 1]
 
     # Start time
     start_time = time.time()
