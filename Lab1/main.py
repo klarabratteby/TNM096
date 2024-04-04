@@ -170,9 +170,11 @@ def construct_solution_path(state):
     path = []
     # Trace back from the goal state to the initial state by following parent pointers
     while state.parent:
+        # add current state to path
         path.append(state.state)
+        # move to the parent state
         state = state.parent
-    # Append the initial state's state representation to the path
+    # Add the initial state to the path
     path.append(state.state)
     # Return the solution path in reverse order (from initial state to goal state)
     return path[::-1]
@@ -185,9 +187,9 @@ def print_state(state):
 
     # Main program
 if __name__ == "__main__":
-    # initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
+    initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
     goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    initial_state = [8, 6, 7, 2, 5, 4, 3, 0, 1]
+    # initial_state = [8, 6, 7, 2, 5, 4, 3, 0, 1]
 
     # Start time
     start_time = time.time()
