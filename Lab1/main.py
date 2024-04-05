@@ -1,8 +1,5 @@
 import heapq
 import time
-import copy
-
-# States of the puzzle
 
 
 class State:
@@ -20,6 +17,7 @@ class State:
     def __lt__(self, other):
         return (self.cost + self.heuristic) < (other.cost + other.heuristic)
 
+
 # Function for h1
 
 
@@ -31,21 +29,6 @@ def h1(state, goal_state):
     return misplaced
 
 # Function for h2
-
-
-'''
-def h2(state, goal_state):
-    distance = 0
-
-    for i in range(len(state)):
-        vdistance = abs(state[i] % 3 - goal_state[i] % 3)
-        hdistance = abs(state[i] - 3 * (state[i] % 3) -
-                        (goal_state[i] - 3 * (goal_state[i] % 3)))
-
-        distance = distance + vdistance + hdistance
-
-    return distance
-'''
 
 
 def h2(state, goal_state):
@@ -119,10 +102,11 @@ class PriorityQueue:
     # Check is the priority queue is empty
 
     def empty(self):
-        return len(self.elements) == 0
+        return len(self.elements) == 0  # checks if priority queue is empty
     # Insert an item based on priority
 
     def put(self, item, priority):
+        # priority and item = state object
         heapq.heappush(self.elements, (priority, item))
     # Remove item
 
@@ -132,6 +116,7 @@ class PriorityQueue:
 
 def astar(initial_state, goal_state, heuristic):
     frontier = PriorityQueue()
+    # state attribute of the State object holds a reference to the initial_state,
     start_state = State(initial_state, None, 0,
                         heuristic(initial_state, goal_state))
     # Add initial state to the priorityqueue with priority based on cost and heuristic
@@ -140,6 +125,7 @@ def astar(initial_state, goal_state, heuristic):
     explored = set()
 
     while not frontier.empty():
+
         current_state = frontier.get()
 
         # Check if current state is the goal state
@@ -155,13 +141,14 @@ def astar(initial_state, goal_state, heuristic):
             next_state = apply_action(current_state.state.copy(), action)
             # Check if the next state has not been explored
             if tuple(next_state) not in explored:
+              # State object is created
                 next_state_obj = State(
                     next_state, current_state, current_state.cost + 1, heuristic(next_state, goal_state))
-                # If the next state has not been explored -> add to the priority queue
+                # add to the priority queue
                 frontier.put(next_state_obj, next_state_obj.cost +
                              next_state_obj.heuristic)
 
-    return None  # No solution found
+    return None
 
 # Construct solution path
 
@@ -187,9 +174,9 @@ def print_state(state):
 
     # Main program
 if __name__ == "__main__":
-    initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
+    # initial_state = [2, 5, 0, 1, 4, 8, 7, 3, 6]
     goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    # initial_state = [8, 6, 7, 2, 5, 4, 3, 0, 1]
+    initial_state = [8, 6, 7, 2, 5, 4, 3, 0, 1]
 
     # Start time
     start_time = time.time()
@@ -226,7 +213,8 @@ if __name__ == "__main__":
         print("Goal State:")
         print_state(goal_state)
         print("Solution Path:")
-        for state in solution_path:
+        for index, state in enumerate(solution_path):
+            print(f"State {index}:")
             print_state(state)
     else:
         print("No solution found.")
