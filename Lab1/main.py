@@ -12,11 +12,12 @@ class State:
 
     def __eq__(self, other):
         return self.state == other.state
-    # Less than comparison
 
+    # Less than comparison
+'''
     def __lt__(self, other):
         return (self.cost + self.heuristic) < (other.cost + other.heuristic)
-
+'''
 
 # Function for h1
 
@@ -171,6 +172,7 @@ def print_state(state):
     for i in range(3):
         print(state[i * 3:i * 3 + 3])
     print()
+
 
     # Main program
 if __name__ == "__main__":
