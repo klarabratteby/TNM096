@@ -9,13 +9,17 @@ Created on Thu Apr 11 15:11:31 2024
 import copy
 import random
 
-maxsteps=22
+maxsteps=10
 
-TP51=["MT101", "MT104", "MT107", "MT203", "MT206", "MT303", "MT402", "MT502"]
-SP34=["MT102", "MT105", "MT201", "MT204", "MT301", "MT304", "MT403", ""]
-K3=["MT103", "MT106", "MT202", "MT205", "MT302", "MT401", "MT501", ""]
+courses=["MT101", "MT102", "MT103", "MT104", "MT105", "MT106", "MT107", 
+         "MT201", "MT202", "MT203", "MT204", "MT205", "MT206",
+         "MT301", "MT302", "MT303", "MT304",
+         "MT401", "MT402", "MT403",
+         "MT501", "MT502",
+         "", ""]
+random.shuffle(courses)
 
-classrooms=dict(TP51=TP51, SP34=SP34, K3=K3)
+classrooms=dict(TP51=courses[:8], SP34=courses[8:16], K3=courses[16:24])
 
 def random_conflict(classrooms):
     conflicts_list=[]
