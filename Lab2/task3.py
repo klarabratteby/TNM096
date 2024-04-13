@@ -8,6 +8,7 @@ Created on Thu Apr 11 15:11:31 2024
 
 import copy
 import random
+import pandas as pd
 
 maxsteps=10
 
@@ -34,9 +35,6 @@ def random_conflict(classrooms):
     conflict_tuple=random.choice(conflicts_list)
     
     return conflict_tuple
-    
-    
-    
 
 def count_conflicts(classrooms):
     conflicts_num=0
@@ -77,6 +75,4 @@ while maxsteps > 0 and count_conflicts(classrooms) > 0:
     classrooms=copy.deepcopy(classrooms_new)
     maxsteps-=1
 
-for key in list(classrooms.keys()):
-    print(key)
-    print(classrooms[key])
+print(pd.DataFrame(classrooms, range(9, 17), classrooms.keys()))
