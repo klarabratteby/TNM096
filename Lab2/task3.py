@@ -27,8 +27,9 @@ def random_conflict(classrooms):
     for i in range(len(classrooms['TP51'])):
         for course_tuple in [("TP51", "SP34"), ("TP51", "K3"), ("SP34", "K3")]:
             if classrooms[course_tuple[0]][i] != "" and classrooms[course_tuple[1]][i] != "":
-                if classrooms[course_tuple[0]][i][2] == classrooms[course_tuple[1]][i][2]:
-                    conflicts_list.append((course_tuple[0], i))
+                if classrooms[course_tuple[0]][i][2] != 5 and classrooms[course_tuple[1]][i][2] != 5:
+                    if classrooms[course_tuple[0]][i][2] == classrooms[course_tuple[1]][i][2]:
+                        conflicts_list.append((course_tuple[0], i))
     
     conflict_tuple=random.choice(conflicts_list)
     
@@ -43,8 +44,9 @@ def count_conflicts(classrooms):
     for i in range(len(classrooms['TP51'])):
         for course_tuple in [("TP51", "SP34"), ("TP51", "K3"), ("SP34", "K3")]:
             if classrooms[course_tuple[0]][i] != "" and classrooms[course_tuple[1]][i] != "":
-                if classrooms[course_tuple[0]][i][2] == classrooms[course_tuple[1]][i][2]:
-                    conflicts_num+=1
+               if classrooms[course_tuple[0]][i][2] != 5 and classrooms[course_tuple[1]][i][2] != 5:
+                   if classrooms[course_tuple[0]][i][2] == classrooms[course_tuple[1]][i][2]:
+                        conflicts_num+=1
 
     
     return conflicts_num
