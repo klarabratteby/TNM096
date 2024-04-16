@@ -20,8 +20,6 @@ courses=["MT101", "MT102", "MT103", "MT104", "MT105", "MT106", "MT107",
          "", ""]
 random.shuffle(courses)
 
-# classrooms=dict(TP51=courses[:8], SP34=courses[8:16], K3=courses[16:24])
-# classrooms=pd.DataFrame([courses[:8], courses[8:16], courses[16:24]], range(9, 17), ["TP51", "SP34", "K3"])
 classrooms=pd.DataFrame(dict(TP51=courses[:8], SP34=courses[8:16], K3=courses[16:24]), range(9, 17))
 
 def random_conflict(classrooms):
@@ -47,7 +45,6 @@ def count_conflicts(classrooms):
                if classrooms.loc[i, course_tuple[0]][2] != 5 and classrooms.loc[i, course_tuple[1]][2] != 5:
                    if classrooms.loc[i, course_tuple[0]][2] == classrooms.loc[i, course_tuple[1]][2]:
                         conflicts_num+=1
-
     
     return conflicts_num
 
