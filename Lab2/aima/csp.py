@@ -90,11 +90,15 @@ class CSP(Problem):
     def actions(self, state):
         """Return a list of applicable actions: nonconflicting
         assignments to an unassigned variable."""
+        # Check if all variables are already assigned.
         if len(state) == len(self.variables):
-            return []
+            return []  # If all variables are assigned, return an empty list.
         else:
+            # Convert the state into a dictionary with assigned variables
             assignment = dict(state)
+            # Find the first unassigned variable.
             var = first([v for v in self.variables if v not in assignment])
+            # Generate actions for the unassigned variable.
             return [(var, val) for val in self.domains[var]
                     if self.nconflicts(var, val, assignment) == 0]
 
@@ -116,7 +120,8 @@ class CSP(Problem):
         """Make sure we can prune values from domains. (We want to pay
         for this only if we use it.)"""
         if self.curr_domains is None:
-            self.curr_domains = {v: list(self.domains[v]) for v in self.variables}
+            self.curr_domains = {
+                v: list(self.domains[v]) for v in self.variables}
 
     def suppose(self, var, value):
         """Start accumulating inferences from assuming var=value."""
@@ -160,16 +165,25 @@ class CSP(Problem):
 def AC3(csp, queue=None, removals=None):
     """[Figure 6.3]"""
     if queue is None:
+        # Initialize queue with all arcs between variables and their neighbors
+        # Tuples of arcs
         queue = [(Xi, Xk) for Xi in csp.variables for Xk in csp.neighbors[Xi]]
     csp.support_pruning()
+    # Check arc consistency
     while queue:
+        # pop an arc from the queue
         (Xi, Xj) = queue.pop()
+        # Revise the domain of Xi based on Xj
         if revise(csp, Xi, Xj, removals):
+            # if domain of Xi becomes empty, the CSP has no solution
             if not csp.curr_domains[Xi]:
                 return False
+            # Add arcs to the queue for all neighbors of Xi
             for Xk in csp.neighbors[Xi]:
+                # Don't add the same arc again
                 if Xk != Xi:
                     queue.append((Xk, Xi))
+    # No inconsistency found, return true.
     return True
 
 
@@ -191,20 +205,25 @@ def revise(csp, Xi, Xj, removals):
 
 def first_unassigned_variable(assignment, csp):
     """The default variable order."""
+    # Selects the first unassigned variable from the list of variables in the CSP
     return first([var for var in csp.variables if var not in assignment])
 
 
 def mrv(assignment, csp):
     """Minimum-remaining-values heuristic."""
     return argmin_random_tie(
+        # Select unassigned variables
         [v for v in csp.variables if v not in assignment],
-        key=lambda var: num_legal_values(csp, var, assignment))
+        key=lambda var: num_legal_values(csp, var, assignment))  # Choose variable(s) with minimum remaining legal values
 
 
 def num_legal_values(csp, var, assignment):
+
     if csp.curr_domains:
+        # Return the length of the current domain of the variable
         return len(csp.curr_domains[var])
     else:
+        # Count the number of values in the variable's domain that do not conflict with the current assignment
         return count(csp.nconflicts(var, val, assignment) == 0
                      for val in csp.domains[var])
 
@@ -230,13 +249,20 @@ def no_inference(csp, var, value, assignment, removals):
 
 def forward_checking(csp, var, value, assignment, removals):
     """Prune neighbor values inconsistent with var=value."""
+    # Iterate over neighbors of var
     for B in csp.neighbors[var]:
+        # Check if B is not yet assigned a value
         if B not in assignment:
+            # Iterate over each value b in the current domain of neighbor B
             for b in csp.curr_domains[B][:]:
+                # Check if the constraint between var=value and B=b is not satisfied
                 if not csp.constraints(var, value, B, b):
+                    # If the constraint is not satisfied, prune the value b from the current domain of B
                     csp.prune(B, b, removals)
+            # If the current domain of neighbor B becomes empty after pruning, return False indicating failure
             if not csp.curr_domains[B]:
                 return False
+    # Return True indicating success if no empty domains were encountered during pruning
     return True
 
 
@@ -250,26 +276,37 @@ def mac(csp, var, value, assignment, removals):
 def backtracking_search(csp,
                         select_unassigned_variable=first_unassigned_variable,
                         order_domain_values=unordered_domain_values,
-                        inference=no_inference):
+                        inference=no_inference):  # expects an instance of the CSP class to be passed to it
     """[Figure 6.5]"""
-
+    # If the length of the assignment equals the total number of variables -> return assignment
     def backtrack(assignment):
         if len(assignment) == len(csp.variables):
             return assignment
+        # Selects unassigned variable
         var = select_unassigned_variable(assignment, csp)
+        # Value selection, iterates over domain values of the selected variable
         for value in order_domain_values(var, assignment, csp):
+            # Constraint Checking
             if 0 == csp.nconflicts(var, value, assignment):
+                # assign variable
                 csp.assign(var, value, assignment)
+                # temporarily remove that value from the domain
                 removals = csp.suppose(var, value)
+                # apply inference
                 if inference(csp, var, value, assignment, removals):
+                    # if inference is successful -> recursivly call itself with updated assignment
                     result = backtrack(assignment)
+                    # if solution is found return result
                     if result is not None:
                         return result
+                # if the inference step fails restore the domain
                 csp.restore(removals)
+        # unassign the variable
         csp.unassign(var, assignment)
         return None
-
+    # starts with empty assignment
     result = backtrack({})
+    # result of backtracking search is either None or a solution that passes the goal test
     assert result is None or csp.goal_test(result)
     return result
 
@@ -355,7 +392,7 @@ def build_topological(node, parent, neighbors, visited, stack, parents):
     visited[node] = True
 
     for n in neighbors[node]:
-        if(not visited[n]):
+        if (not visited[n]):
             build_topological(n, node, neighbors, visited, stack, parents)
 
     parents[node] = parent
@@ -365,15 +402,15 @@ def build_topological(node, parent, neighbors, visited, stack, parents):
 def make_arc_consistent(Xj, Xk, csp):
     """Make arc between parent (Xj) and child (Xk) consistent under the csp's constraints,
     by removing the possible values of Xj that cause inconsistencies."""
-    #csp.curr_domains[Xj] = []
+    # csp.curr_domains[Xj] = []
     for val1 in csp.domains[Xj]:
-        keep = False # Keep or remove val1
+        keep = False  # Keep or remove val1
         for val2 in csp.domains[Xk]:
             if csp.constraints(Xj, val1, Xk, val2):
                 # Found a consistent assignment for val1, keep it
                 keep = True
                 break
-        
+
         if not keep:
             # Remove val1
             csp.prune(Xj, val1, None)
@@ -636,10 +673,12 @@ class Sudoku(CSP):
                    for var, ch in zip(flatten(self.rows), squares)}
         for _ in squares:
             raise ValueError("Not a Sudoku grid", grid)  # Too many squares
-        CSP.__init__(self, None, domains, self.neighbors, different_values_constraint)
+        CSP.__init__(self, None, domains, self.neighbors,
+                     different_values_constraint)
 
     def display(self, assignment):
-        def show_box(box): return [' '.join(map(show_cell, row)) for row in box]
+        def show_box(box): return [' '.join(
+            map(show_cell, row)) for row in box]
 
         def show_cell(cell): return str(assignment.get(cell, '.'))
 
