@@ -1,5 +1,4 @@
 import random
-import copy;
 class Clause():
 
   def __init__(self, pos=None,neg=None): 
