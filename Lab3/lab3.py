@@ -34,6 +34,8 @@ def resolution(C1,C2):
     return False
 
   return C
+  
+# Not done
 '''
 solver(KB):
     while True:
