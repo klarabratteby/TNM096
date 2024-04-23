@@ -71,7 +71,7 @@ def optimize_conflicts(classrooms, classtuple, index_to_test):
     
     if classrooms_new is not None:
         return classrooms_new
-    
+
     return classrooms
 
 def apply_preferences(classrooms, classtuples, prefs):

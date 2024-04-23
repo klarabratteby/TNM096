@@ -1,23 +1,25 @@
 """  TASK2/LAB2    TNM096   
      Solve the nQueens problem by using depth-first search            """
-     
-     
+
+
 from time import time
 from datetime import timedelta
 from aima.search import depth_first_tree_search, NQueensProblem, Problem
 
+
 def secondsToStr(t):
     return str(timedelta(seconds=t))
 
+
 def now():
     return secondsToStr(time())
-    
+
 
 # 1. Set up the problem and set the starting time
-n = 4
+n = 5
 
 print("\nStarting at at  "+now()[12:20])
-print("problem with n =",n)
+print("problem with n =", n)
 start = time()
 
 # 2. Solve the NQueens problem with depth-first search

@@ -75,8 +75,11 @@ class CSP(Problem):
     def nconflicts(self, var, val, assignment):
         """Return the number of conflicts var=val has with other variables."""
         # Subclasses may implement this more efficiently
+        # Define a nested function to check for conflicts with a neighbor variable
         def conflict(var2):
+            # Check if var2 is already assigned a value in the current assignment
             return (var2 in assignment and
+                    # Check if assigning val to var conflicts with the value assigned to var2
                     not self.constraints(var, val, var2, assignment[var2]))
         return count(conflict(v) for v in self.neighbors[var])
 
@@ -173,7 +176,7 @@ def AC3(csp, queue=None, removals=None):
     while queue:
         # pop an arc from the queue
         (Xi, Xj) = queue.pop()
-        # Revise the domain of Xi based on Xj
+        # Revise domain Xi based on Xj
         if revise(csp, Xi, Xj, removals):
             # if domain of Xi becomes empty, the CSP has no solution
             if not csp.curr_domains[Xi]:
@@ -315,20 +318,31 @@ def backtracking_search(csp,
 
 
 def min_conflicts(csp, max_steps=100000):
+    # counter = 0
     """Solve a CSP by stochastic hillclimbing on the number of conflicts."""
-    # Generate a complete assignment for all variables (probably with conflicts)
+    # Generate an empty assignment
     csp.current = current = {}
     for var in csp.variables:
+        # Choose a value for each variable that minimizes conflicts
         val = min_conflicts_value(csp, var, current)
+        # Assign the selected value to the variable
         csp.assign(var, val, current)
     # Now repeatedly choose a random conflicted variable and change it
     for i in range(max_steps):
+        # Detect conflicted variables in the current assignment
         conflicted = csp.conflicted_vars(current)
+        # If no conflicts are found, return the current assignment
         if not conflicted:
+            # return current
             return current
+        # Choose a random conflicted variable
         var = random.choice(conflicted)
+        # Choose a value for the selected variable that minimizes conflicts
         val = min_conflicts_value(csp, var, current)
+        # Assign the selected value to the selected variable
         csp.assign(var, val, current)
+        # counter += 1
+        # print(f"counter: {counter}")
     return None
 
 
@@ -548,9 +562,12 @@ class NQueensCSP(CSP):
         Count conflicts in row and in up, down diagonals. If there
         is a queen there, it can't conflict with itself, so subtract 3."""
         n = len(self.variables)
+        # Count conflicts in the row, down diagonal, and up diagonal
         c = self.rows[val] + self.downs[var+val] + self.ups[var-val+n-1]
+        
         if assignment.get(var, None) == val:
             c -= 3
+        # Return the total number of conflicts
         return c
 
     def assign(self, var, val, assignment):
