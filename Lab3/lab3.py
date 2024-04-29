@@ -119,28 +119,34 @@ if __name__ == "__main__":
   # KB = {C1, C2, C3, C4, C5, C6}
   
     # Logic Gates puzzle
+    # Initial conditions
     C1 = Clause([],['A'])
     C2 = Clause(['B'])
     C3 = Clause(['C'])
     C4 = Clause(['D'])
     C5 = Clause(['E'])
     C6 = Clause([],['F'])
+    # A XOR B = G
     C7 = Clause(['A','B'],['G'])
     C8 = Clause([],['A','B','G'])
     C9 = Clause(['B','G'],['A'])
     C10 = Clause(['A','G'],['B'])
+    # C XOR D = H
     C11 = Clause(['C','D'],['H'])
     C12 = Clause([],['C','D','H'])
     C13 = Clause(['D','H'],['C'])
     C14 = Clause(['C','H'],['D'])
+    # E XOR F = I
     C15 = Clause(['E','F'],['I'])
     C16 = Clause([],['E','F','I'])
     C17 = Clause(['F','I'],['E'])
     C18 = Clause(['E','I'],['F'])
+    # G XOR H = J
     C19 = Clause(['G','H'],['J'])
     C20 = Clause([],['G','H','J'])
     C21 = Clause(['H','J'],['G'])
     C22 = Clause(['G','J'],['H'])
+    # J XOR I = K
     C23 = Clause(['J','I'],['K'])
     C24 = Clause([],['J','I','K'])
     C25 = Clause(['I','K'],['J'])
