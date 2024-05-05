@@ -16,8 +16,9 @@ class Clause():
   
   #Subsumption
   def subsumption(self,other):
-    if self.pos.issubset(other.pos):
-      if self.neg.issubset(other.neg):
+    # Check if C1 is a subset of C2 (both pos and neg)
+    if self.pos.issubset(other.pos) and self.neg.issubset(other.neg):
+        # Check if every literal in C1 is also in C2
         if self.pos != other.pos or self.neg != other.neg:
           return True
     return False
@@ -39,10 +40,11 @@ def resolution(C1, C2):
     C1.neg.remove(common_literal)
     C2.pos.remove(common_literal)
 
-  # Construct resolvent
+  # Construct resolvent with the remaining literals
   C.pos = C1.pos.union(C2.pos)
   C.neg = C2.neg.union(C1.neg)
 
+  # Tautology
   if C.pos.intersection(C.neg):
     return False
 
@@ -57,18 +59,25 @@ def solver(KB):
             if C != B and C.pos.issubset(B.pos) and C.neg.issubset(B.neg) and B in KB:
                 KB.remove(B)
 
+    # Resolution loop, continue until we have no resolvants left
     while KB != KBbis:      
         S = set()
         KBbis = copy.deepcopy(KB)
         
+        # Iterate over all pairs of clauses
         for C1 in KB:
             for C2 in KB:
-                if C1 == C2:
+                # We dont compare identical clauses
+                if C1 == C2: 
                     continue
+                # Apply resolution to generate a new clause
                 C = resolution(copy.deepcopy(C1), copy.deepcopy(C2))
+                
+                # Add new clause to set 
                 if C is not False:
                     S = union(C, S)
-                    
+
+        # If no new clauses are generated, return KB     
         if len(S) == 0:
             return KB
         
@@ -76,21 +85,23 @@ def solver(KB):
         
     return KB
 
+# Iterate over each clause in S
 def incorporate(S, KB):
     for C in S:
         KB = incorporate_clause(C, KB)
-    
     return KB
 
 def incorporate_clause(C, KB):
     for B in KB:
+        # Check if B is a subset of C
         if B.pos.issubset(C.pos) and B.neg.issubset(C.neg):
-            return KB
+            return KB # return KB as it is 
     
     for B in KB.copy():
+        # Check if C is a subset of B
         if C.pos.issubset(B.pos) and C.neg.issubset(B.neg):
             KB.remove(B)
-    
+    # Add C to KB
     KB = union(C, KB)
     
     return KB
@@ -106,8 +117,9 @@ def union(C, S):
 
       
 if __name__ == "__main__":
+  
+  # Task A
   # Resolution
-
   # Example 1
   C1 = Clause(['a','b'],['c'])
   C2 = Clause(['b','c'])
@@ -160,7 +172,7 @@ if __name__ == "__main__":
   result2 = C1.issubset(C2)
   print("Strict subset:", result2)
 
-  '''
+  
   # Drawing conclusions
   #1.
   C1 = Clause(['ice'],['sun','money'])
@@ -177,8 +189,9 @@ if __name__ == "__main__":
   print("Result is:")
   for C in solved:
     print(C)
-
   
+  
+  # Task B
   # Logic Gates puzzle
   # Initial conditions
   C1 = Clause([],['A'])
@@ -188,7 +201,7 @@ if __name__ == "__main__":
   C5 = Clause(['E'])
   C6 = Clause([],['F'])
   # A XOR B = G
-  C7 = Clause(['A','B'],['G'])
+  C7 = Clause(['A','B'],['G']) 
   C8 = Clause([],['A','B','G'])
   C9 = Clause(['B','G'],['A'])
   C10 = Clause(['A','G'],['B'])
@@ -221,7 +234,7 @@ if __name__ == "__main__":
   print("Result is:")
   for Csolved in solved:
       print(Csolved)
-  '''
+  
 
 
 
