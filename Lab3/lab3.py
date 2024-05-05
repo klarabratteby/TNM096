@@ -10,6 +10,17 @@ class Clause():
   # Return string 
   def __str__(self):
     return f"{''.join(self.pos) + ''.join('¬'+ x for x in self.neg)}"
+  
+  def issubset(self, other):
+        return self.pos.issubset(other.pos) and self.neg.issubset(other.neg)
+  
+  #Subsumption
+  def subsumption(self,other):
+    if self.pos.issubset(other.pos):
+      if self.neg.issubset(other.neg):
+        if self.pos != other.pos or self.neg != other.neg:
+          return True
+    return False
 
 def resolution(C1, C2):
 
@@ -92,74 +103,125 @@ def union(C, S):
     S.add(C)
     
     return S
-        
 
       
 if __name__ == "__main__":
-  # example 1
-  #C1 = Clause(['p','q'],['r'])
-  #C2 = Clause(['q','r'])
-  #resolvent = resolution(C1,C2)
-  #print("Resolvent:", resolvent)
-  
-  # example 2
-  #C1 = Clause(['a','b'], ['c'])
-  #C2 = Clause(['b','d'],['g'])
-  #resolvent = resolution(C1,C2)
-  #print("Resolvent:", resolvent)
+  # Resolution
+
+  # Example 1
+  C1 = Clause(['a','b'],['c'])
+  C2 = Clause(['b','c'])
+  resolvent = resolution(C1,C2)
+  print("Resolvent:", resolvent)
+
+  # Example 2
+  C1 = Clause(['a','b'], ['c'])
+  C2 = Clause(['b','d'],['g'])
+  resolvent = resolution(C1,C2)
+  print("Resolvent:", resolvent)
   #solved = solver(S)
+
+  # Example 3
+  C1 = Clause(['c','t'], ['b'])
+  C2 = Clause(['b','z'],['c'])
+  resolvent = resolution(C1,C2)
+  print("Resolvent:", resolvent)
+
   
+  # Subsumption 
+  # Example 1
+  C1 = Clause(['c','a'])
+  C2 = Clause(['a','b','c'])
+  result = C1.subsumption(C2)
+  print("Strict subset:", result)
+
+  # Example 2
+  C1 = Clause(['b'],['c'])
+  C2 = Clause(['a','b'],['c'])
+  result = C1.subsumption(C2)
+  print("Strict subset:", result)
+
+  # Example 3
+  C1 = Clause(['b'],['f','c'])
+  C2 = Clause(['a','b'],['c'])
+  result = C1.subsumption(C2)
+  print("Strict subset:", result)
+
+  # Example 4
+  C1 = Clause(['b'])
+  C2 = Clause(['a','b'],['c'])
+  result = C1.subsumption(C2)
+  print("Strict subset:", result)
+
+  # Example 5
+  C1 = Clause(['b','a'],['c'])
+  C2 = Clause(['a','b'],['c'])
+  result1 = C1.subsumption(C2)
+  result2 = C1.issubset(C2)
+  print("Strict subset:", result2)
+
+  '''
   # Drawing conclusions
-  # C1 = Clause(['ice'],['sun','money'])
-  # C2 = Clause(['ice', 'movie'],['money'])
-  # C3 = Clause(['money'],['movie'])
-  # C4 = Clause([],['movie','ice'])
-  # C5 = Clause(['movie'])
-  # C6 = Clause(['sun','money','cry'])
-  # KB = {C1, C2, C3, C4, C5, C6}
+  #1.
+  C1 = Clause(['ice'],['sun','money'])
+  C2 = Clause(['ice', 'movie'],['money'])
+  C3 = Clause(['money'],['movie'])
+  C4 = Clause([],['movie','ice'])
+  C5 = Clause(['movie'])
+  C6 = Clause(['sun','money','cry'])
+  #2. 
+  KB = {C1, C2, C3, C4, C5, C6}
+  #3.
+  solved = solver(KB)
+  print("")
+  print("Result is:")
+  for C in solved:
+    print(C)
+
   
-    # Logic Gates puzzle
-    # Initial conditions
-    C1 = Clause([],['A'])
-    C2 = Clause(['B'])
-    C3 = Clause(['C'])
-    C4 = Clause(['D'])
-    C5 = Clause(['E'])
-    C6 = Clause([],['F'])
-    # A XOR B = G
-    C7 = Clause(['A','B'],['G'])
-    C8 = Clause([],['A','B','G'])
-    C9 = Clause(['B','G'],['A'])
-    C10 = Clause(['A','G'],['B'])
-    # C XOR D = H
-    C11 = Clause(['C','D'],['H'])
-    C12 = Clause([],['C','D','H'])
-    C13 = Clause(['D','H'],['C'])
-    C14 = Clause(['C','H'],['D'])
-    # E XOR F = I
-    C15 = Clause(['E','F'],['I'])
-    C16 = Clause([],['E','F','I'])
-    C17 = Clause(['F','I'],['E'])
-    C18 = Clause(['E','I'],['F'])
-    # G XOR H = J
-    C19 = Clause(['G','H'],['J'])
-    C20 = Clause([],['G','H','J'])
-    C21 = Clause(['H','J'],['G'])
-    C22 = Clause(['G','J'],['H'])
-    # J XOR I = K
-    C23 = Clause(['J','I'],['K'])
-    C24 = Clause([],['J','I','K'])
-    C25 = Clause(['I','K'],['J'])
-    C26 = Clause(['J','K'],['J'])
-    KB = {C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, 
-          C11, C12, C13, C14, C15, C16, C17, C18, C19, C20,
-          C21, C22, C23, C24, C25, C26}
-  
-    solved = solver(KB)
-    print("")
-    print("Result is:")
-    for Csolved in solved:
-        print(Csolved)
+  # Logic Gates puzzle
+  # Initial conditions
+  C1 = Clause([],['A'])
+  C2 = Clause(['B'])
+  C3 = Clause(['C'])
+  C4 = Clause(['D'])
+  C5 = Clause(['E'])
+  C6 = Clause([],['F'])
+  # A XOR B = G
+  C7 = Clause(['A','B'],['G'])
+  C8 = Clause([],['A','B','G'])
+  C9 = Clause(['B','G'],['A'])
+  C10 = Clause(['A','G'],['B'])
+  # C XOR D = H
+  C11 = Clause(['C','D'],['H'])
+  C12 = Clause([],['C','D','H'])
+  C13 = Clause(['D','H'],['C'])
+  C14 = Clause(['C','H'],['D'])
+  # E XOR F = I
+  C15 = Clause(['E','F'],['I'])
+  C16 = Clause([],['E','F','I'])
+  C17 = Clause(['F','I'],['E'])
+  C18 = Clause(['E','I'],['F'])
+  # G XOR H = J
+  C19 = Clause(['G','H'],['J'])
+  C20 = Clause([],['G','H','J'])
+  C21 = Clause(['H','J'],['G'])
+  C22 = Clause(['G','J'],['H'])
+  # J XOR I = K
+  C23 = Clause(['J','I'],['K'])
+  C24 = Clause([],['J','I','K'])
+  C25 = Clause(['I','K'],['J'])
+  C26 = Clause(['J','K'],['J'])
+  KB = {C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, 
+        C11, C12, C13, C14, C15, C16, C17, C18, C19, C20,
+        C21, C22, C23, C24, C25, C26}
+    
+  solved = solver(KB)
+  print("")
+  print("Result is:")
+  for Csolved in solved:
+      print(Csolved)
+  '''
 
 
 
