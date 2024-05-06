@@ -26,23 +26,25 @@ class Clause():
 def resolution(C1, C2):
 
   C = Clause() # empty clause for resolvent
+  C1r = copy.deepcopy(C1) # C1 and C2 should not be modified
+  C2r = copy.deepcopy(C2)
 
   # No common 
-  if not(C1.pos).intersection(C2.neg) and not (C1.neg).intersection(C2.pos):
+  if not(C1r.pos).intersection(C2r.neg) and not (C1r.neg).intersection(C2r.pos):
     return False
 
-  if C1.pos.intersection(C2.neg):
-    common_literal = random.choice(list(C1.pos.intersection(C2.neg)))
-    C1.pos.remove(common_literal)
-    C2.neg.remove(common_literal)
+  if C1r.pos.intersection(C2r.neg):
+    common_literal = random.choice(list(C1r.pos.intersection(C2r.neg)))
+    C1r.pos.remove(common_literal)
+    C2r.neg.remove(common_literal)
   else:
-    common_literal = random.choice(list(C1.neg.intersection(C2.pos)))
-    C1.neg.remove(common_literal)
-    C2.pos.remove(common_literal)
+    common_literal = random.choice(list(C1r.neg.intersection(C2r.pos)))
+    C1r.neg.remove(common_literal)
+    C2r.pos.remove(common_literal)
 
   # Construct resolvent with the remaining literals
-  C.pos = C1.pos.union(C2.pos)
-  C.neg = C2.neg.union(C1.neg)
+  C.pos = C1r.pos.union(C2r.pos)
+  C.neg = C2r.neg.union(C1r.neg)
 
   # Tautology
   if C.pos.intersection(C.neg):
@@ -71,7 +73,7 @@ def solver(KB):
                 if C1 == C2: 
                     continue
                 # Apply resolution to generate a new clause
-                C = resolution(copy.deepcopy(C1), copy.deepcopy(C2))
+                C = resolution(C1, C2)
                 
                 # Add new clause to set 
                 if C is not False:
