@@ -75,7 +75,7 @@ def solver(KB):
                 
                 # Add new clause to set 
                 if C is not False:
-                    S = union(C, S)
+                    S.add(C)
 
         # If no new clauses are generated, return KB     
         if len(S) == 0:
@@ -102,18 +102,9 @@ def incorporate_clause(C, KB):
         if C.pos.issubset(B.pos) and C.neg.issubset(B.neg):
             KB.remove(B)
     # Add C to KB
-    KB = union(C, KB)
+    KB.add(C)
     
     return KB
-
-def union(C, S):
-    for B in S:
-        if C.pos == B.pos and C.neg == B.neg:
-            return S
-
-    S.add(C)
-    
-    return S
 
       
 if __name__ == "__main__":
