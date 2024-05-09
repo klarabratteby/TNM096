@@ -15,7 +15,7 @@ act( go(X,Y),
      ).
 
 act( push(B,X,Y),
-     [at(shakey,X), at(B,X), connected(X,Y), light_on(X), onfloor],
+     [at(shakey,X), at(B,X), connected(X,Y), inroom(X, Room), light_on(Room), onfloor],
      [at(shakey,X), at(B,X)],
      [at(shakey,Y), at(B,Y)]
      ).
@@ -67,10 +67,17 @@ initial_state(
           connected(switch3, room3),
           connected(switch4, room4),
 
+          inroom(corridor, corridor),
+
+          inroom(room1, room1),
+          inroom(room2, room2),
+          inroom(room3, room3),
+          inroom(room4, room4),
+
           inroom(switch1, room1),
-          inroom(switch2, room1),
-          inroom(switch3, room1),
-          inroom(switch4, room1),
+          inroom(switch2, room2),
+          inroom(switch3, room3),
+          inroom(switch4, room4),
 
           light_on(room1),
           light_on(room4),
