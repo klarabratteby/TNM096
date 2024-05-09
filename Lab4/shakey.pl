@@ -9,31 +9,31 @@
 
 % actions
 act( go(X,Y),
-     [at(shakey,X), connected(X,Y), onfloor],
-     [at(shakey,X)],
-     [at(shakey,Y)]
+     [at(shakey,X), connected(X,Y), inroom(X,RoomX), shakey_inroom(RoomX), inroom(Y,RoomY), onfloor],
+     [at(shakey,X), shakey_inroom(RoomX)],
+     [at(shakey,Y), shakey_inroom(RoomY)]
      ).
 
 act( push(B,X,Y),
-     [at(shakey,X), at(B,X), connected(X,Y), inroom(X, Room), light_on(Room), onfloor],
-     [at(shakey,X), at(B,X)],
-     [at(shakey,Y), at(B,Y)]
+     [at(shakey,X), at(B,X), connected(X,Y), inroom(X, Room), light_on(Room), inroom(X,RoomX), shakey_inroom(RoomX), inroom(Y,RoomY), onfloor],
+     [at(shakey,X), at(B,X), shakey_inroom(RoomX)],
+     [at(shakey,Y), at(B,Y), shakey_inroom(RoomY)]
      ).
 
 act( turn_on(S),
-     [at(shakey,S), inroom(S, Room), light_off(Room), onbox],
+     [at(shakey,S), switch(S), inroom(S, Room), light_off(Room), onbox],
      [light_off(Room)],
      [light_on(Room)]
      ).
 
 act( turn_off(S),
-     [at(shakey,S), inroom(S, Room), light_on(Room), onbox],
+     [at(shakey,S), switch(S), inroom(S, Room), light_on(Room), onbox],
      [light_on(Room)],
      [light_off(Room)]
      ).
 
 act( climb_up(B,X),
-     [at(shakey,X), at(B, X), onfloor],
+     [at(shakey,X), at(B, X), box(B), onfloor],
      [onfloor],
      [onbox]
      ).
@@ -44,7 +44,7 @@ act( climb_down(X),
      [onfloor]
      ).  
 
-goal_state( [at(shakey, room1), light_off(room1), at(box2, room2)] ).
+goal_state( [shakey_inroom(room1), light_off(room1), at(box2, room2)] ).
 
 initial_state(
      [    connected(room1, corridor),
@@ -79,6 +79,16 @@ initial_state(
           inroom(switch3, room3),
           inroom(switch4, room4),
 
+          switch(switch1),
+          switch(switch2),
+          switch(switch3),
+          switch(switch4),
+
+          box(box1),
+          box(box2),
+          box(box3),
+          box(box4),
+
           light_on(room1),
           light_on(room4),
           light_off(room2),
@@ -86,6 +96,8 @@ initial_state(
           light_on(corridor),
 
           at(shakey, room3),
+          shakey_inroom(room3),
+
           at(box1, room1),
           at(box2, room1),
           at(box3, room1),
