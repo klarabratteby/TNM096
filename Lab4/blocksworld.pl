@@ -8,9 +8,14 @@ green(X) :- X in 2 \/ 5.
 blue(X) :- X in 3 \/ 6.
 
 % Actions
-act(move(X,A,B),[...],[...],[...]):-
-block(X),
-A #\= B.
+act(move(X,A,B),
+    [on(X,A), clear(X),clear(B)],[on(X,A)], %preconditions
+    [on(X,A)], % delete
+    [on(X,B), clear(A)] % add
+
+):-
+block(B), % ensures B is a block
+A #\= B. % ensures block is not moved to the same location
 
 
 % Goal state
