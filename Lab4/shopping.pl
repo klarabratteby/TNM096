@@ -2,7 +2,7 @@
 % SHOPPING PROBLEM
 
 % CONTROL PARAMETERS
-ordering(linear).
+ordering(partial).
 derivedPlans(one).
 
 % ACTIONS:    action(Name,Prec,Del,Add)
@@ -11,7 +11,7 @@ derivedPlans(one).
 action(buy(A,W,Store),
 	[store(Store),at(A,Store),sells(Store,W)],
 	[],
-	[has(A,W),obj_at(W,Store)]).
+	[has(A,W),objAt(W,Store)]).
 
 % Agent A goes from location X to location Y
 action(go(A,X,Y),
@@ -19,14 +19,14 @@ action(go(A,X,Y),
 	[at(A,X)],
 	[at(A,Y)]).
 
-action(carry(A, W, X, Y),
+action(carry(A,W,X,Y),
 	[has(A,W),location(X),location(Y),X\=Y,at(A,X),objAt(W,X)],
 	[at(A,X),objAt(W,X)],
 	[at(A,Y),objAt(W,Y)]).
 
 % PARALLELISMS
-% parallel(X, Y) :- X =.. [F|_], Y =.. [F|_], F = buy, !.
-% parallel(X, Y) :- X =.. [F, A, W1, From, To], Y =.. [F, A, W2, From, To], F = carry, W1 \= W2, !.
+parallel(X, Y) :- X =.. [F|_], Y =.. [F|_], F = buy, !.
+parallel(X, Y) :- X =.. [F, A, W1, From, To], Y =.. [F, A, W2, From, To], F = carry, W1 \= W2, !.
 
 % FLUENT
 fluent(at(_,_)).
