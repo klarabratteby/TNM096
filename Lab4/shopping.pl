@@ -25,8 +25,8 @@ action(carry(A,W,X,Y),
 	[at(A,Y),objAt(W,Y)]).
 
 % PARALLELISMS
-parallel(X, Y) :- X =.. [F|_], Y =.. [F|_], F = buy, !.
-parallel(X, Y) :- X =.. [F, A, W1, From, To], Y =.. [F, A, W2, From, To], F = carry, W1 \= W2, !.
+parallel(X,Y) :- X =.. [F,A,W1,Store], Y =.. [F,A,W2,Store], F=buy, W1\=W2, !.
+parallel(X,Y) :- X =.. [F,A,W1,From,To], Y =.. [F,A,W2,From,To], F=carry, W1\=W2, !.
 
 % FLUENT
 fluent(at(_,_)).
