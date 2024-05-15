@@ -11,7 +11,7 @@ blue(X) :- X in 3 \/ 6.
 
 % Actions
 act(move(X,A,B),
-    [on(X,A), clear(X), clear(B)], % preconditions
+    [clear(X), clear(B)], % preconditions
     [on(X,A), clear(B)], % delete
     [on(X,B), clear(A)] % add
 
@@ -24,6 +24,7 @@ act( move_to_table(X,A),
      [on(X,A)], % delete
      [on(X,0), clear(A)] % add
 ):-
+table(0),
 A #\= 0. % ensure A is not already on the table
 
 % Goal state
