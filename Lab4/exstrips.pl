@@ -54,8 +54,8 @@ solve(State, Goal, Plan, Plan, _, _):-
 solve(State, Goal, Sofar, Plan, Counter, Level):-
      Counter =< Level,
      act(Action, Precons, Delete, Add),
-     is_subset(Precons, State),
-     \+ member(Action, Sofar),
+     is_subset(Precons, State), % check if preconditions are satisfied
+     \+ member(Action, Sofar), % action has not been used before
      delete_list(Delete, State, Remainder),
      add_list(Add, Remainder, NewState),
      ok_state(NewState),

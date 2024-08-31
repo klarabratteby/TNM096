@@ -8,16 +8,17 @@
 
 
 % actions
-act( go(X,Y),
-     [at(shakey,X), connected(X,Y), inroom(X,RoomX), inroom(shakey,RoomX), inroom(Y,RoomY), onfloor],
-     [at(shakey,X), inroom(shakey,RoomX)],
-     [at(shakey,Y), inroom(shakey,RoomY)]
-     ).
 
 act( push(B,X,Y),
      [at(shakey,X), at(B,X), connected(X,Y), inroom(X,Room), light_on(Room), inroom(X,RoomX), inroom(shakey,RoomX), inroom(Y,RoomY), onfloor],
      [at(shakey,X), at(B,X), inroom(shakey,RoomX)],
      [at(shakey,Y), at(B,Y), inroom(shakey,RoomY)]
+     ).
+
+act( go(X,Y),
+     [at(shakey,X), connected(X,Y), inroom(X,RoomX), inroom(shakey,RoomX), inroom(Y,RoomY), onfloor],
+     [at(shakey,X), inroom(shakey,RoomX)],
+     [at(shakey,Y), inroom(shakey,RoomY)]
      ).
 
 act( turn_on(S),
@@ -44,7 +45,8 @@ act( climb_down(X),
      [onfloor]
      ).  
 
-goal_state( [inroom(shakey,room1), light_off(room1), at(box2,room2)] ).
+% goal_state( [inroom(shakey,room1), light_off(room1), at(box2,room2)] ).
+goal_state( [light_off(room1)] ).
 
 initial_state(
      [    connected(room1, corridor),
